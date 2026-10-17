@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MemberPulse — Spot the drop. Step in. Keep them moving.</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23F9543A'/%3E%3Cpath d='M8 34h10l6-14 10 26 7-18 3 6h12' stroke='white' stroke-width='5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg viewBox="0 0 64 64" width="52" height="52"><rect width="64" height="64" rx="14" fill="#F9543A"/><path d="M8 34h10l6-14 10 26 7-18 3 6h12" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><strong>MemberPulse</strong><span data-i18n="login.tag">Member retention for boutique studios</span></div>
+    </div>
+    <h2 data-i18n="login.title">Welcome back</h2>
+    <p class="muted" data-i18n="login.sub">Sign in to see your studio's live retention demo.</p>
+    <form id="loginForm">
+      <label data-i18n="login.name">Studio / coach name</label>
+      <input id="loginName" type="text" value="Iron Pulse Studio" required>
+      <label data-i18n="login.email">Email</label>
+      <input id="loginEmail" type="email" value="demo@memberpulse.fit" required>
+      <label data-i18n="login.pass">Password</label>
+      <input id="loginPass" type="password" value="pulse123" required>
+      <button type="submit" class="btn btn-accent" data-i18n="login.enter">Enter demo →</button>
+      <button type="button" class="btn btn-ghost btn-sm" id="btnDemoFill" data-i18n="login.fill">Use demo account</button>
+    </form>
+    <p class="muted login-note" data-i18n="login.note">Local demo — no backend. Any credentials work.</p>
+  </div>
+</div>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="logo">
+      <svg viewBox="0 0 64 64" width="34" height="34"><rect width="64" height="64" rx="14" fill="#F9543A"/><path d="M8 34h10l6-14 10 26 7-18 3 6h12" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Member<b>Pulse</b></span>
+    </div>
+    <nav>
+      <a href="#dashboard" data-i18n="nav.dash">Dashboard</a>
+      <a href="#how" data-i18n="nav.how">How it works</a>
+      <a href="#why" data-i18n="nav.why">Why MemberPulse</a>
+      <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+    </nav>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button data-lang="en" class="active">EN</button>
+      <button data-lang="es">ES</button>
+    </div>
+    <div id="userChip" class="user-chip hidden"><span id="userName"></span><button id="btnLogout" data-i18n="login.out">Log out</button></div>
+    <a href="#cta" class="btn btn-accent btn-sm" data-i18n="nav.demo">Book a 5-min demo</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow" data-i18n="hero.eyebrow">Member retention for boutique studios · Pilates · CrossFit · Martial Arts</p>
+      <h1 data-i18n="hero.title">What if you knew <em>first?</em></h1>
+      <p class="lede" data-i18n="hero.lede">Some members stop coming <strong>weeks before they cancel</strong> — from 3× a week to once, then they disappear. MemberPulse tracks attendance and flags who is losing motivation, so you step in <strong>before</strong> they leave.</p>
+      <div class="hero-cta">
+        <a href="#dashboard" class="btn btn-accent" data-i18n="hero.cta1">See live alerts ↓</a>
+        <button class="btn btn-ghost" id="btnSimulateTop" data-i18n="hero.cta2">Simulate 1 week →</button>
+      </div>
+      <p class="hero-note" data-i18n="hero.note">It starts with one missed class. This demo uses fictional studio data.</p>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-head"><span class="live"></span><span data-i18n="hero.live">LIVE ALERT</span><span id="heroAlertCount"></span></div>
+      <div id="heroAlerts"></div>
+      <div class="hero-card-foot" data-i18n="hero.foot">Every warning sign in one place — no spreadsheets.</div>
+    </div>
+  </div>
+</section>
+
+<!-- KPIs -->
+<section class="wrap kpis">
+  <div class="kpi"><span class="kpi-label" data-i18n="kpi.members">Active members</span><span class="kpi-val" id="kpiMembers">12</span><span class="kpi-sub" data-i18n="kpi.across">Across 3 programs</span></div>
+  <div class="kpi kpi-danger"><span class="kpi-label" data-i18n="kpi.attn">Needs attention</span><span class="kpi-val" id="kpiRisk">—</span><span class="kpi-sub" id="kpiRiskSub"></span></div>
+  <div class="kpi"><span class="kpi-label" data-i18n="kpi.visits">Avg visits / week</span><span class="kpi-val" id="kpiAvg">—</span><span class="kpi-sub" data-i18n="kpi.last4">studio-wide, last 4 wks</span></div>
+  <div class="kpi kpi-money"><span class="kpi-label" data-i18n="kpi.rev">Revenue at risk</span><span class="kpi-val" id="kpiRev">—</span><span class="kpi-sub" data-i18n="kpi.monthly">monthly, at-risk members</span></div>
+</section>
+
+<!-- DASHBOARD -->
+<main class="wrap" id="dashboard">
+  <div class="section-head">
+    <h2><span data-i18n="dash.title">Risk queue</span> <span class="muted" data-i18n="dash.sub">— proactive, not reactive</span></h2>
+    <div class="controls">
+      <input id="search" type="search" data-i18n-ph="dash.search" placeholder="Search member…">
+      <select id="filterStudio">
+        <option value="all" data-i18n="dash.allProg">All programs</option>
+        <option>Pilates</option>
+        <option>CrossFit</option>
+        <option>Martial Arts</option>
+      </select>
+      <select id="filterRisk">
+        <option value="all" data-i18n="dash.allRisk">All risk levels</option>
+        <option value="High" data-i18n="risk.highOnly">High only</option>
+        <option value="Medium" data-i18n="risk.medOnly">Medium only</option>
+        <option value="Stable" data-i18n="risk.stableOnly">Stable only</option>
+      </select>
+      <button class="btn btn-accent btn-sm" id="btnSimulate" data-i18n="dash.sim">Simulate 1 week →</button>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <div id="memberList" class="member-list"></div>
+
+    <aside class="detail" id="detail">
+      <div class="detail-head">
+        <div class="avatar" id="dAvatar">--</div>
+        <div>
+          <h3 id="dName">—</h3>
+          <p id="dMeta" class="muted"></p>
+        </div>
+        <span id="dRisk" class="badge">—</span>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title"><span data-i18n="detail.chart">Attendance — last 8 weeks</span> <span class="muted" id="dTrendText"></span></div>
+        <canvas id="trendChart" width="520" height="200"></canvas>
+        <div class="weeks" id="weekLabels"></div>
+      </div>
+      <div class="insight" id="dInsight"></div>
+      <div class="nextstep">
+        <strong data-i18n="detail.next">Suggested next step for staff:</strong>
+        <p id="dNext">—</p>
+      </div>
+      <label class="msg-label" data-i18n="detail.msg">Friendly, personalized message (editable):</label>
+      <textarea id="msgBox" rows="4"></textarea>
+      <div class="detail-actions">
+        <button class="btn btn-accent btn-sm" id="btnSend" data-i18n="detail.send">Send message ✓</button>
+        <button class="btn btn-ghost btn-sm" id="btnCheckin" data-i18n="detail.checkin">+ Check-in today</button>
+        <button class="btn btn-ghost btn-sm" id="btnSaved" data-i18n="detail.saved">Mark as saved ♥</button>
+      </div>
+      <div class="activity">
+        <strong data-i18n="detail.log">Activity log</strong>
+        <ul id="activityLog"></ul>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<!-- HOW IT WORKS -->
+<section class="wrap" id="how">
+  <h2 data-i18n="how.title">How MemberPulse works</h2>
+  <div class="steps">
+    <div class="step"><span class="step-n">1</span><h3 data-i18n="how.s1t">Detect a significant drop</h3><p data-i18n="how.s1p">We compare each member's last 2 weeks vs. their normal rhythm. A 30%+ dip raises a flag — 50%+ is high risk.</p></div>
+    <div class="step"><span class="step-n">2</span><h3 data-i18n="how.s2t">Alert the team</h3><p data-i18n="how.s2p">One list, ready to act. No hours reviewing records, no reports to dig through. The warning comes to you.</p></div>
+    <div class="step"><span class="step-n">3</span><h3 data-i18n="how.s3t">Staff sends a friendly message</h3><p data-i18n="how.s3p">Maybe they need a new schedule, motivation, or help getting back into routine. Reach out at the right moment.</p></div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="wrap" id="why">
+  <h2 data-i18n="why.title">Why MemberPulse</h2>
+  <p class="muted" data-i18n="why.sub">Not just tracking who shows up — knowing when someone needs support.</p>
+  <table class="compare">
+    <thead><tr><th></th><th data-i18n="why.c1">Spreadsheets</th><th data-i18n="why.c2">Typical booking software</th><th class="hl">MemberPulse</th></tr></thead>
+    <tbody>
+      <tr><td><strong data-i18n="why.r1">Spotting drops</strong></td><td data-i18n="why.r1a">Manual review</td><td data-i18n="why.r1b">Logs visits, no alerts</td><td class="hl" data-i18n="why.r1c">Automatic alerts ✓</td></tr>
+      <tr><td><strong data-i18n="why.r2">When you act</strong></td><td data-i18n="why.r2a">After they cancel</td><td data-i18n="why.r2a2">After they cancel</td><td class="hl" data-i18n="why.r2c">When attendance starts to fall ✓</td></tr>
+      <tr><td><strong data-i18n="why.r3">Staff time</strong></td><td data-i18n="why.r3a">Hours of records</td><td data-i18n="why.r3b">Reports to dig through</td><td class="hl" data-i18n="why.r3c">One list, ready to act ✓</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- PRICING / ASK -->
+<section class="wrap pricing" id="pricing">
+  <div class="price-card">
+    <div>
+      <h2>$59 <small data-i18n="price.per">/ location / month</small></h2>
+      <p data-i18n="price.p1">Simple monthly subscription per studio · Free 14-day trial — studios see their first alerts before they pay.</p>
+      <p data-i18n="price.p2">Pays for itself: keeping just <strong>one member a month</strong> covers the subscription. At 100 studios → <strong>$70,800 ARR</strong>.</p>
+      <p class="muted" data-i18n="price.p3">Boutique fitness: $47.9B (2023) → $85.9B (2030) ≈ 8.7% yearly growth. ~9,900 CrossFit gyms alone.</p>
+    </div>
+    <div class="ask" id="cta">
+      <h3 data-i18n="price.ask">The ask: $120K pre-seed</h3>
+      <ul>
+        <li data-i18n="price.l1">50% product & integrations ($60K)</li>
+        <li data-i18n="price.l2">30% pilots & sales ($36K)</li>
+        <li data-i18n="price.l3">20% operations ($24K)</li>
+      </ul>
+      <p class="muted" data-i18n="price.ms">Month 3: pilot with 5 studios · Month 6: 25 paying · Month 12: 100 paying.</p>
+      <a class="btn btn-accent" href="mailto:hello@memberpulse.fit?subject=5-minute%20MemberPulse%20demo" data-i18n="nav.demo">Book a 5-min demo</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <strong data-i18n="foot.slogan">MemberPulse: Spot the drop. Step in. Keep them moving.</strong>
+    <span class="muted" data-i18n="foot.sub">Because keeping a member is better than winning them back.</span>
+  </div>
+</footer>
+
+<div id="toasts"></div>
+<script src="app.js"></script>
+</body>
+</html>
